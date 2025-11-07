@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FakeTwitter - Home</title>
+    <!-- 
+      This <script> tag is super important! 
+      It loads "Tailwind CSS," which is a "CSS framework."
+      Think of it as a giant box of styling shortcuts. Instead of writing
+      a bunch of custom CSS code, we can use simple "classes" like "bg-blue-500"
+      or "font-bold" directly in our HTML. It makes building clean UIs
+      and responsive designs much, much faster.
+    -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- We can add a few custom settings for Tailwind here -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'twitter-blue': '#1DA1F2',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- 
+      This is for icons. We'll use Lucide icons (https://lucide.dev/) 
+      FIX: Changed from 'lucide-react' to 'lucide' UMD script.
+      'lucide-react' is for React projects and doesn't create the global 'lucide' object
+      that our plain JavaScript needs.
+    -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body class="bg-white text-gray-900">
+
+    <!-- 
+      This is the main container for the whole app.
+      We use "flex" to arrange our 3 columns (Sidebar, Feed, Widgets) side-by-side.
+      "container" and "mx-auto" help center the content on wider screens.
+    -->
+    <div class="container mx-auto flex min-h-screen">
+
+        <!-- ===== 1. SIDEBAR ===== -->
+        <!-- 
+          This is the left-hand navigation bar.
+          - "w-1/5" means it takes up 1/5th of the width on large screens.
+          - "border-r" adds a border to its right side.
+          - "p-4" adds some padding (space) inside it.
+          - "hidden md:flex" is our first bit of RESPONSIVENESS!
+            It means: "hide this sidebar by default, but if the screen is
+            'medium' (md) size or larger (like a tablet or desktop), 
+            then 'flex' (show) it." On mobile, it will disappear.
+        -->
+        <aside class="w-1/5 border-r border-gray-200 p-4 pt-6 hidden md:flex flex-col space-y-4">
+            <!-- Logo (Twitter Bird) -->
+            <div>
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="w-7 h-7 text-twitter-blue fill-current">
+                    <g><path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.39.106-.803.163-1.227.163-.3 0-.593-.03-.877-.084.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"></path></g>
+                </svg>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex flex-col space-y-2">
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-full hover:bg-gray-100 text-xl font-bold">
+                    <i data-lucide="home" class="w-7 h-7"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-full hover:bg-gray-100 text-xl">
+                    <i data-lucide="hash" class="w-7 h-7"></i>
+                    <span>Explore</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-full hover:bg-gray-100 text-xl">
+                    <i data-lucide="bell" class="w-7 h-7"></i>
+                    <span>Notifications</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-full hover:bg-gray-100 text-xl">
+                    <i data-lucide="mail" class="w-7 h-7"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-full hover:bg-gray-100 text-xl">
+                    <i data-lucide="user" class="w-7 h-7"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-full hover:bg-gray-100 text-xl">
+                    <i data-lucide="more-horizontal" class="w-7 h-7"></i>
+                    <span>More</span>
+                </a>
+            </nav>
+
+            <!-- Tweet Button -->
+            <button class="bg-twitter-blue text-white w-full py-3 rounded-full font-bold text-lg hover:bg-blue-500 transition-colors">
+                Tweet
+            </button>
+        </aside>
+
+        <!-- ===== 2. TIMELINE FEED ===== -->
+        <!-- 
+          This is the main middle section.
+          - "w-full" means on mobile, it takes up the FULL width.
+          - "md:w-3/5" means on medium screens, it takes up 3/5ths (60%).
+          - "lg:w-3/5" is a bit redundant but ensures it stays at 3/5ths.
+          - "border-r" adds a right border.
+        -->
+        <main class="w-full md:w-3/5 lg:w-3/5 border-r border-gray-200">
+            <!-- Header (e.g., "Home") -->
+            <div class="sticky top-0 bg-white bg-opacity-80 backdrop-blur-sm border-b border-gray-200 p-4">
+                <h1 class="text-xl font-bold">Home</h1>
+            </div>
+
+            <!-- ===== TWEET BOX ===== -->
+            <!-- 
+              This is the box for creating a new tweet.
+              We'll add JavaScript to this part soon.
+            -->
+            <div class="p-4 border-b border-gray-200">
+                <div class="flex space-x-3">
+                    <!-- Profile Pic Placeholder -->
+                    <img src="https://placehold.co/50x50/E2E8F0/94A3B8?text=You" alt="Your Profile" class="w-12 h-12 rounded-full">
+                    
+                    <!-- Text Area and Button -->
+                    <div class="flex-1">
+                        <textarea 
+                            id="tweet-input"
+                            class="w-full text-xl p-2 border-none focus:ring-0" 
+                            rows="3" 
+                            placeholder="What's happening?"
+                        ></textarea>
+                        
+                        <div class="flex justify-end items-center mt-2">
+                            <!-- TODO: Add icon buttons for media, poll, etc. -->
+                            <button 
+                                id="tweet-button"
+                                class="bg-twitter-blue text-white px-5 py-2 rounded-full font-bold hover:bg-blue-500 disabled:opacity-50"
+                            >
+                                Tweet
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== THE ACTUAL TIMELINE/FEED ===== -->
+            <!-- 
+              This is where all the tweets will show up.
+              We'll add new tweets here using JavaScript.
+              For now, I've added two "mock" tweets so we can see what it
+              looks like.
+            -->
+            <div id="timeline-feed">
+                <!-- Mock Tweet 1 -->
+                <article class="flex space-x-3 p-4 border-b border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    <!-- Profile Pic -->
+                    <img src="https://placehold.co/50x50/1DA1F2/FFFFFF?text=G" alt="Profile" class="w-12 h-12 rounded-full">
+                    
+                    <!-- Tweet Content -->
+                    <div class="flex-1">
+                        <!-- User Info -->
+                        <div class="flex space-x-1">
+                            <span class="font-bold">Google</span>
+                            <span class="text-gray-500">@Google</span>
+                            <span class="text-gray-500">&middot; 2h</span>
+                        </div>
+                        
+                        <!-- Tweet Text -->
+                        <p class="mt-1">
+                            Hello, FakeTwitter! We're excited to be here.
+                        </p>
+
+                        <!-- Tweet Actions (Reply, Retweet, Like) -->
+                        <div class="flex justify-between mt-3 max-w-sm text-gray-500">
+                            <button class="flex items-center space-x-1 hover:text-blue-500">
+                                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                                <span>12</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-green-500">
+                                <i data-lucide="repeat-2" class="w-5 h-5"></i>
+                                <span>42</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-red-500">
+                                <i data-lucide="heart" class="w-5 h-5"></i>
+                                <span>188</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-blue-500">
+                                <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                                <span>1.2K</span>
+                            </button>
+                            <button class="hover:text-blue-500">
+                                <i data-lucide="share" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Mock Tweet 2 -->
+                <article class="flex space-x-3 p-4 border-b border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    <!-- Profile Pic -->
+                    <img src="https://placehold.co/50x50/34D399/FFFFFF?text=Z" alt="Profile" class="w-12 h-12 rounded-full">
+                    
+                    <!-- Tweet Content -->
+                    <div class="flex-1">
+                        <!-- User Info -->
+                        <div class="flex space-x-1">
+                            <span class="font-bold">Zaio</span>
+                            <span class="text-gray-500">@Zaioio</span>
+                            <span class="text-gray-500">&middot; 5h</span>
+                        </div>
+                        
+                        <!-- Tweet Text -->
+                        <p class="mt-1">
+                            This is a great project for learning HTML, Tailwind, and JavaScript!
+                            <br><br>
+                            Keep up the good work. 🚀
+                        </p>
+
+                        <!-- Tweet Actions (Reply, Retweet, Like) -->
+                        <div class="flex justify-between mt-3 max-w-sm text-gray-500">
+                            <button class="flex items-center space-x-1 hover:text-blue-500">
+                                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                                <span>3</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-green-500">
+                                <i data-lucide="repeat-2" class="w-5 h-5"></i>
+                                <span>12</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-red-500">
+                                <i data-lucide="heart" class="w-5 h-5"></i>
+                                <span>50</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-blue-500">
+                                <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                                <span>800</span>
+                            </button>
+                            <button class="hover:text-blue-500">
+                                <i data-lucide="share" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+        </main>
+
+        <!-- ===== 3. WIDGETS ===== -->
+        <!-- 
+          This is the right-hand column for "Trending" or "Who to follow".
+          - "w-1/5" takes up 1/5th of the width.
+          - "p-4" adds padding.
+          - "hidden lg:block" is more RESPONSIVENESS!
+            It means: "hide this by default, but if the screen is
+            'large' (lg) size or bigger (a desktop), then 'block' (show) it."
+            This ensures we have a clean layout on mobile and tablets.
+        -->
+        <aside class="w-1/5 p-4 pt-6 hidden lg:block">
+            <!-- Search Bar -->
+            <input type="text" placeholder="Search FakeTwitter" class="w-full bg-gray-100 rounded-full px-4 py-2 border-none focus:ring-2 focus:ring-twitter-blue">
+        
+            <!-- Trending Section -->
+            <div class="bg-gray-100 rounded-2xl mt-4">
+                <h2 class="text-xl font-bold p-3 border-b border-gray-200">Trends for you</h2>
+                <div class="flex flex-col space-y-3 p-3">
+                    <div class="hover:bg-gray-200 p-2 rounded-lg cursor-pointer">
+                        <span class="text-sm text-gray-500">1 &middot; Trending</span>
+                        <p class="font-bold">#FakeTwitter</p>
+                        <span class="text-sm text-gray-500">120K Tweets</span>
+                    </div>
+                    <div class="hover:bg-gray-200 p-2 rounded-lg cursor-pointer">
+                        <span class="text-sm text-gray-500">2 &middot; Trending</span>
+                        <p class="font-bold">#WebDev</p>
+                        <span class="text-sm text-gray-500">45.5K Tweets</span>
+                    </div>
+                    <div class="hover:bg-gray-200 p-2 rounded-lg cursor-pointer">
+                        <span class="text-sm text-gray-500">3 &middot; Trending</span>
+                        <p class="font-bold">#ZaioProject</p>
+                        <span class="text-sm text-gray-500">1,234 Tweets</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+
+    <!-- 
+      ===== JAVASCRIPT "THE BRAINS" =====
+      This <script> tag at the bottom holds our page's logic.
+      We put it at the bottom so it runs *after* the HTML elements
+      (like the button and text box) have been created.
+    -->
+    <script>
+        // FIX: We wrap our code in a 'DOMContentLoaded' event listener.
+        // This tells the browser: "Don't run this JavaScript until the
+        // entire HTML document has been loaded and parsed."
+        // This prevents errors where our script tries to use a library (like lucide)
+        // that hasn't finished loading yet.
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // This command tells our script to run the "lucide.createIcons()" function.
+            // This function finds all the "data-lucide" attributes (like <i data-lucide="home">)
+            // and replaces them with the actual SVG icon code.
+            lucide.createIcons();
+
+
+            // --- Make the Tweet Button Functional ---
+
+            // 1. Get (or "select") the HTML elements we need to work with.
+            // We find them by the "id" we gave them in the HTML.
+            const tweetButton = document.getElementById('tweet-button');
+            const tweetInput = document.getElementById('tweet-input');
+            const timelineFeed = document.getElementById('timeline-feed');
+
+            // 2. Add an "event listener" to the button.
+            // This is like saying, "Hey, 'tweetButton', listen for a 'click'
+            // event. When you hear one, run this function."
+            tweetButton.addEventListener('click', () => {
+                // 3. Get the text from the input box.
+                // ".value" gets the text the user actually typed.
+                // ".trim()" removes any extra whitespace from the start or end.
+                const tweetText = tweetInput.value.trim();
+
+                // 4. Check if the text isn't empty.
+                // We don't want to post an empty tweet!
+                if (tweetText) {
+                    // 5. If it's not empty, call our function to create a new tweet.
+                    addNewTweet(tweetText);
+
+                    // 6. Clear the input box so the user can type a new tweet.
+                    tweetInput.value = '';
+                }
+            });
+
+            // This is the function that actually creates the new tweet HTML.
+            // It takes the "text" from the input box as an argument.
+            function addNewTweet(text) {
+                // 1. Create a new <article> element in memory.
+                // This is the main container for our new tweet.
+                const tweetArticle = document.createElement('article');
+                
+                // 2. Add the Tailwind CSS classes to the new <article>.
+                // These are the *exact same* classes we used for our "mock" tweets.
+                tweetArticle.className = 'flex space-x-3 p-4 border-b border-gray-200 hover:bg-gray-50 cursor-pointer';
+
+                // 3. Set the "innerHTML" of the new article.
+                // This is a fast way to inject all the HTML for the tweet's
+                // contents (profile pic, name, text, action buttons).
+                // We use the "text" variable to put the user's text inside the <p> tag.
+                // Note: In a real app, we'd "sanitize" this text to prevent
+                // security issues, but for this project, this is perfect.
+                tweetArticle.innerHTML = `
+                    <!-- Profile Pic -->
+                    <img src="https://placehold.co/50x50/E2E8F0/94A3B8?text=You" alt="Your Profile" class="w-12 h-12 rounded-full">
+                    
+                    <!-- Tweet Content -->
+                    <div class="flex-1">
+                        <!-- User Info -->
+                        <div class="flex space-x-1">
+                            <span class="font-bold">You</span>
+                            <span class="text-gray-500">@you</span>
+                            <span class="text-gray-500">&middot; 1s</span>
+                        </div>
+                        
+                        <!-- Tweet Text -->
+                        <p class="mt-1">
+                            ${text}
+                        </p>
+
+                        <!-- Tweet Actions (Reply, Retweet, Like) -->
+                        <div class="flex justify-between mt-3 max-w-sm text-gray-500">
+                            <button class="flex items-center space-x-1 hover:text-blue-500">
+                                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                                <span>0</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-green-500">
+                                <i data-lucide="repeat-2" class="w-5 h-5"></i>
+                                <span>0</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-red-500">
+                                <i data-lucide="heart" class="w-5 h-5"></i>
+                                <span>0</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-blue-500">
+                                <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                                <span>0</span>
+                            </button>
+                            <button class="hover:text-blue-500">
+                                <i data-lucide="share" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // 4. Add the new tweet to the timeline!
+                // "prepend" adds it to the *beginning* of the 'timelineFeed'
+                // container, so new tweets appear at the top, just like real Twitter.
+                timelineFeed.prepend(tweetArticle);
+
+                // 5. We have to run createIcons() again!
+                // Why? Because we just added new <i data-lucide="..."> tags,
+                // and the script needs to find them and turn them into icons.
+                lucide.createIcons();
+            }
+
+        }); // <-- Close the DOMContentLoaded listener
+    </script>
+
+</body>
+</html>
